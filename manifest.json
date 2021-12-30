@@ -1,0 +1,27 @@
+{
+    "manifest_version":2,
+    "name":"CF stalker",
+    "version":"0.1.1",
+    "description":"stalk your ex",
+    "icons":{
+         "128": "src/icons/icon128.png",
+        "48": "src/icons/icon48.png",
+        "16": "src/icons/icon16.png"
+    },
+    "browser_action":{
+        "default_icon":"src/icons/icon16.png",
+        "default_popup":"",
+        "default_title":"CF stalker"
+    },
+    "background":{
+
+    },"content_scripts":[
+        {
+            "matches": ["https://codeforces.com/profile/*"],
+            "js":["src/lib/jquery-3.6.0.min.js","src/lib/chart.min.js","src/js/main.js"]
+        }
+    ],
+     "permissions":[
+        "https://codeforces.com/*"
+    ]
+}
