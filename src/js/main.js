@@ -1,18 +1,18 @@
+const days31=[[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],];
 const maxdiff = 1000000;
 const structure ={
-    0 : [maxdiff,0],
-    1 : [maxdiff,0],
-    2 : [maxdiff,0],
-    3 : [maxdiff,0],
-    4 : [maxdiff,0],
-    5 : [maxdiff,0],
-    6 : [maxdiff,0],
-    7 : [maxdiff,0],
-    8 : [maxdiff,0],
-    9 : [maxdiff,0],
-    10 : [maxdiff,0],
-    11 : [maxdiff,0],
-    
+    0 : [maxdiff,0,new Set(),[...days31]],
+    1 : [maxdiff,0,new Set(),[...days31]],
+    2 : [maxdiff,0,new Set(),[...days31]],
+    3 : [maxdiff,0,new Set(),[...days31]],
+    4 : [maxdiff,0,new Set(),[...days31]],
+    5 : [maxdiff,0,new Set(),[...days31]],
+    6 : [maxdiff,0,new Set(),[...days31]],
+    7 : [maxdiff,0,new Set(),[...days31]],
+    8 : [maxdiff,0,new Set(),[...days31]],
+    9 : [maxdiff,0,new Set(),[...days31]],
+    10 : [maxdiff,0,new Set(),[...days31]],
+    11 : [maxdiff,0,new Set(),[...days31]],
 }
 var years = [];
 var minmax = new Map();
@@ -82,16 +82,35 @@ function initilizedata( arr){
             const d = new Date(arr[i]['creationTimeSeconds']*1000);
             const year = d.getFullYear();
             const month = d.getMonth();
+            const date = d.getDate();
             const difficulty = arr[i]['problem']['rating'];
+            const tags = arr[i]['problem']['tags'];
+            const problemid = arr[i]['problem']['contestId'];
+            const index =  arr[i]['problem']['index'];
+            if (isNaN(difficulty))
+              continue;
             // console.log(year,month,difficulty);
              if(ispresent[year] === undefined){
+                 console.log(tags);
                  ispresent[year]=1;
                  years.push(year);
                  var temp = {...structure};
-                 temp[month] =[difficulty,difficulty];
+                 const value = new Set([...temp[month][2]]);
+                 tags.map((e)=>{
+                    value.add(e);
+                 })
+                  const temp2 = [...temp[month][3]];
+                 const storingproblems = new Set(temp2[date-1][1]);
+                 storingproblems.add( makeproblemlink(problemid,index));
+                //  console.log(storingproblems)
+                 temp2[date-1] = [temp2[date-1][0]+1 , storingproblems];
+                 console.log(year,temp2);
+                 temp[month] =[difficulty,difficulty,value,temp2];
+    
                  minmax.set(year,temp);
-
-                console.group(structure);
+                //  console.log(date);
+                
+                // console.group(structure);
 
              }
              else {
@@ -99,10 +118,27 @@ function initilizedata( arr){
                     const temp = {...minmax.get(year)};
                     const firstv = temp[month][0];
                     const secondv = temp[month][1];
-                    temp[month] = [Math.min(difficulty,firstv) , Math.max(difficulty,secondv)];
+                    const value = new Set([...temp[month][2]]);
+                    tags.map((e)=>{
+                    value.add(e);
+                 })
+                    const temp2 = [...temp[month][3]];
+                 const storingproblems = new Set(temp2[date-1][1]);
+                 storingproblems.add( makeproblemlink(problemid,index));
+                 temp2[date-1] = [temp2[date-1][0]+1 , storingproblems];
+
+                    temp[month] = [Math.min(difficulty,firstv) , Math.max(difficulty,secondv),value,temp2];
+                   
                     minmax.set(year,temp);
              }
         }
     }
     // console.log("wow");
+}
+function makeproblemlink(contestId,index){
+  if(contestId && contestId.toString().length<=4){
+    return `https://codeforces.com/problemset/problem/${contestId}/${index}`;
+  }else{
+    return `https://codeforces.com/problemset/gymProblem/${contestId}/${index}`;
+  }
 }
