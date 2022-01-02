@@ -14,8 +14,10 @@
         "default_title":"CF stalker"
     },
     "background":{
-
-    },"content_scripts":[
+        "scripts": ["src/js/bgscripts.js"],
+        "persistent": false
+    },
+    "content_scripts":[
         {
             "matches": ["https://codeforces.com/profile/*"],
             "js":["src/lib/jquery-3.6.0.min.js","src/lib/chart.min.js","src/js/main.js"]

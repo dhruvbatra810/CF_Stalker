@@ -1,5 +1,27 @@
 const days31=[[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],];
 const maxdiff = 1000000;
+let minyear=Infinity;// value that will get using select tag
+function updateminyear(){
+  minyear = parseInt(this.value);
+  console.log(minyear);
+  //calling to function 
+  mainmakingcharts();
+}
+var valueformonth ;  // ..............................
+function upddatevalueformonth(){
+  valueformonth = parseInt(this.value);
+  console.log(valueformonth);
+  // calling to function
+  mainmakingcharts();
+}
+var valueforday;  // .................................
+function updatevalueforday(){
+  valueforday = parseInt(this.value);
+  console.log(valueforday);
+  //calling to function;
+  mainmakingcharts();
+}
+
 const structure ={
     0 : [maxdiff,0,new Set(),[...days31]],
     1 : [maxdiff,0,new Set(),[...days31]],
@@ -14,40 +36,102 @@ const structure ={
     10 : [maxdiff,0,new Set(),[...days31]],
     11 : [maxdiff,0,new Set(),[...days31]],
 }
+var days=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+var months=[1,2,3,4,5,6,7,8,9,10,11,12];
+var yearss=[];
 var years = [];
 var minmax = new Map();
 var ispresent = new Map();
 var mn ;
 const fun = (e)=>{
-   const v = document.getElementById('pageContent');
+const v = document.getElementById('pageContent');
 const len = v.childNodes.length -1;
 console.log(len);
 for(let i = 2 ; i<len+1 ; i++){
     console.log(v.childNodes[2].class);
     v.removeChild(v.childNodes[2]);
 }
-const wow = document.createElement('h1');
-const textnode = document.createTextNode('hiiiiiiiiiiiiii');
-wow.appendChild(textnode);
-v.prepend(wow);
-mybutton.removeEventListener('click',fun);
+
+
+mainthing();
 
 
 // making get request
 // formating data
 // inserting data to html
 // inserting html
- const profileId = getProfileIdFromUrl(window.location.href);
 
+
+}
+function mainthing(){
+
+  
+
+ chrome.runtime.sendMessage({todo:"appendHTML"},function(response){
+    $('#pageContent').append(response.htmlResponse);
+      const profileId = getProfileIdFromUrl(window.location.href);
+      // const getthing = document.getElementById('selectyear');
+      // const element = document.createElement('h1');
+      // element.addEventListener('click',function(e){
+      //   element.style.color = 'red';
+      // })
+      // const createnode = document.createTextNode('wowowowowowow');
+      // element.append(createnode);
+      // getthing.append(element);
   $.get(`https://codeforces.com/api/user.status?handle=${profileId}`,function(data){
       if(data.status == "OK"){
         initilizedata(data['result']);
         console.log('result',minmax);
+        if(minyear === Infinity)
+         {
+                const getthing = document.getElementById('selectyear');
+      const element = document.createElement('h1');
+      const createnode = document.createTextNode('nothing to show here, go solve a problem');
+      element.append(createnode);
+      getthing.append(element);
+         }
+         else{
+           fillyearss();
+           makeselecttags('foryear' , yearss, updateminyear );
+           makeselecttags('formonth',months , upddatevalueformonth);
+           makeselecttags('forday' , days, updatevalueforday);
+
+
+         }
       }else{
       
         console.error(data.status + ' : ' + data.comment);
       }
     })
+  })
+ 
+}
+
+function fillyearss(){
+  for(const[key,value] of minmax.entries(minmax)){
+    yearss.push(key);
+  }
+  console.log(yearss);
+}
+
+
+
+function makeselecttags(where,arr,fun){
+const insertin = document.getElementById(where);
+const selectt = document.createElement('select');
+selectt.addEventListener('change',fun);
+ for(var key = 0;key<arr.length;key++){
+   const v = document.createElement('option');
+   const att= document.createAttribute('value');
+   const tn = document.createTextNode(`${arr[key]}`);
+   v.append(tn);
+   att.value = `${arr[key]}`;
+   v.setAttributeNode(att);
+   selectt.appendChild(v);
+ }
+ insertin.append(selectt);
+
+
 }
 function getProfileIdFromUrl(url){
   var arr = url.split("/");
@@ -91,7 +175,9 @@ function initilizedata( arr){
               continue;
             // console.log(year,month,difficulty);
              if(ispresent[year] === undefined){
-                 console.log(tags);
+                 minyear = Math.min(minyear,year);
+
+                 console.log(typeof year);
                  ispresent[year]=1;
                  years.push(year);
                  var temp = {...structure};
@@ -108,9 +194,6 @@ function initilizedata( arr){
                  temp[month] =[difficulty,difficulty,value,temp2];
     
                  minmax.set(year,temp);
-                //  console.log(date);
-                
-                // console.group(structure);
 
              }
              else {
@@ -141,4 +224,109 @@ function makeproblemlink(contestId,index){
   }else{
     return `https://codeforces.com/problemset/gymProblem/${contestId}/${index}`;
   }
+}
+
+
+
+
+function mainmakingcharts(){
+  //  making data for 1st chart, dataset
+ var datasetforchart1= createdatasetfor1stchart();
+ var tooltipfordatasetforchart1 = createtooltipforchart1();
+ console.log(datasetforchart1);
+ console.log(tooltipfordatasetforchart1);
+ makechart1(datasetforchart1,tooltipfordatasetforchart1);
+
+}
+
+function makechart1(dataset, tooltip){
+  let charstatus = Chart.getChart("everyyear");
+  if(charstatus != undefined)
+  charstatus.destroy();
+  var ctx = document.getElementById("everyyear").getContext("2d");
+ var data={
+  labels : months,
+  datasets:dataset
+ }
+ console.log(data);
+ const titleTooltip = (tooltipItems) =>{
+                return  tooltip[parseInt(tooltipItems[0].label) -1];
+            }
+
+         var myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    barValueSpacing: 20,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                            }
+                        }]
+                    },
+                    plugins:{
+                        tooltip:{
+                            yAlign:'bottom',
+                            displayColors: false,
+                            callbacks:{
+                                title: titleTooltip
+                            }
+
+                        }
+                    }
+                }
+            });    
+
+
+}
+
+
+function createtooltipforchart1(){
+   var v  = minmax.get(minyear);
+
+   var ans=[];
+   for(let i = 0 ;i<12;i++){
+    let arr= v[i][2];
+    var arrayofstrings=[];
+    var s='';
+    let j=0;
+    for(const value of arr){
+      if(j === 4){
+        j=0;
+        arrayofstrings.push(s);
+        s='';
+      }
+      s =s  + value + ', ';
+
+      j++;
+    }
+    ans.push(arrayofstrings);
+
+   }
+   return ans;
+
+
+}
+function createdatasetfor1stchart(){
+   var v  = minmax.get(minyear);
+  //  console.log(minmax.get(minyear));
+   var minarr=[],maxarr=[];
+   var minarrcolor=[],maxarrcolor=[];
+   for(let i = 0 ;i<12;i++){
+     minarr.push((v[i][0] === 1000000?0:v[i][0]));
+     minarrcolor.push('rgba(255, 99, 132, 0.2)');
+     maxarr.push(v[i][1]);
+     maxarrcolor.push('rgba(54, 162, 235, 0.2)');
+   }
+   console.log('www');
+   return [ 
+     {
+       backgroundColor :minarrcolor,
+       data:minarr
+  } , 
+  { 
+    backgroundColor: maxarrcolor,
+    data:maxarr
+  } ];
 }
