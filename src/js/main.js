@@ -98,7 +98,8 @@ function mainthing(){
            makeselecttags('foryear' , yearss, updateminyear );
            makeselecttags('formonth',months , upddatevalueformonth);
            makeselecttags('forday' , days, updatevalueforday);
-           console.log(minmax);
+          //  console.log(minmax);  
+          mainmakingcharts();
 
 
          }
@@ -247,6 +248,8 @@ function makeproblemlink(contestId,index){
 
 
 function mainmakingcharts(){
+
+ displaydate();
   //  making data for 1st chart, dataset and tooltip
  var datasetforchart1= createdatasetfor1stchart();
  var tooltipfordatasetforchart1 = createtooltipforchart1();
@@ -268,25 +271,52 @@ function mainmakingcharts(){
   ShowProblemsSolvedOnThatDay(v);
 
 }
+function displaydate(){
+  let v = document.getElementById('showingyearno');
+  let len = v.childNodes.length;
+  for(let i = 0 ; i<len; i++){
+      v.removeChild(v.childNodes[i]);
+  }
+  v.append(minyear);
+
+     v = document.getElementById('showingmonthno');
+   len = v.childNodes.length;
+  for(let i = 0 ; i<len; i++){
+      v.removeChild(v.childNodes[i]);
+  }
+  v.append(valueformonth);
+
+     v = document.getElementById('showingdayno');
+   len = v.childNodes.length;
+  for(let i = 0 ; i<len; i++){
+      v.removeChild(v.childNodes[i]);
+  }
+ v.append(valueforday);
+
+}
 function ShowProblemsSolvedOnThatDay(arr){
 
+  const v = document.getElementById('solvedonthatday');
+const len = v.childNodes.length;
+
+for(let i = 0 ; i<len; i++){
+    v.removeChild(v.childNodes[i]);
+}
     const getid = document.getElementById('solvedonthatday');
-    const ul = document.createElement('ul');
+    const span = document.createElement('span');
     for(let i = 0 ;i<arr.length;i++){
-      const li = document.createElement('li');
       const a = document.createElement('a');
       // const href = document.createAttribute('target');
       // href.value =  arr[i];
       a.href=arr[i];
       a.target='_blank';
-      console.log(arr[i]);
+      a.style.textDecoration='none';
 
-      const tn = document.createTextNode(`problem${i+1}`);
+      const tn = document.createTextNode(`  problem${i+1} `);
       a.appendChild(tn);
-      li.append(a);
-      ul.append(li);
+      span.append(a);
     }
-    getid.append(ul);
+    getid.append(span);
 
 
 }
@@ -385,7 +415,7 @@ function createdatasetfor2stchart(){
  const arrrrcolor=[];
  for(let i = 0 ;i<31;i++){
   arrrr.push(vv[i][0]);
-  arrrrcolor.push('rgba(255, 206, 86, 0.5)');
+  arrrrcolor.push('#A594F9');
  }
 //  console.log(arrrr);
 
@@ -478,9 +508,9 @@ function createdatasetfor1stchart(){
    var minarrcolor=[],maxarrcolor=[];
    for(let i = 0 ;i<12;i++){
      minarr.push((v[i][0] === 1000000?0:v[i][0]));
-     minarrcolor.push('rgba(255, 99, 132, 0.5)');
+     minarrcolor.push('#E980FC');
      maxarr.push(v[i][1]);
-     maxarrcolor.push('rgba(54, 162, 235, 0.5)');
+     maxarrcolor.push('#DABFFF');
    }
    console.log('www');
    return [ 

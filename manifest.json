@@ -10,7 +10,7 @@
     },
     "browser_action":{
         "default_icon":"src/icons/icon16.png",
-        "default_popup":"",
+        "default_popup":"src/popup.html",
         "default_title":"CF stalker"
     },
     "background":{
