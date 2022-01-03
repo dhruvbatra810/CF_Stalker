@@ -1,4 +1,4 @@
-const days31=[[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],[0,new Set()],];
+const days31=[[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],[0,new Set() , new Map()],];
 const maxdiff = 1000000;
 let minyear=Infinity;// value that will get using select tag
 function updateminyear(){
@@ -23,18 +23,18 @@ function updatevalueforday(){
 }
 
 const structure ={
-    0 : [maxdiff,0,new Set(),[...days31]],
-    1 : [maxdiff,0,new Set(),[...days31]],
-    2 : [maxdiff,0,new Set(),[...days31]],
-    3 : [maxdiff,0,new Set(),[...days31]],
-    4 : [maxdiff,0,new Set(),[...days31]],
-    5 : [maxdiff,0,new Set(),[...days31]],
-    6 : [maxdiff,0,new Set(),[...days31]],
-    7 : [maxdiff,0,new Set(),[...days31]],
-    8 : [maxdiff,0,new Set(),[...days31]],
-    9 : [maxdiff,0,new Set(),[...days31]],
-    10 : [maxdiff,0,new Set(),[...days31]],
-    11 : [maxdiff,0,new Set(),[...days31]],
+    0 : [maxdiff,0,new Map(),[...days31]],
+    1 : [maxdiff,0,new Map(),[...days31]],
+    2 : [maxdiff,0,new Map(),[...days31]],
+    3 : [maxdiff,0,new Map(),[...days31]],
+    4 : [maxdiff,0,new Map(),[...days31]],
+    5 : [maxdiff,0,new Map(),[...days31]],
+    6 : [maxdiff,0,new Map(),[...days31]],
+    7 : [maxdiff,0,new Map(),[...days31]],
+    8 : [maxdiff,0,new Map(),[...days31]],
+    9 : [maxdiff,0,new Map(),[...days31]],
+    10 : [maxdiff,0,new Map(),[...days31]],
+    11 : [maxdiff,0,new Map(),[...days31]],
 }
 var days=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
 var months=[1,2,3,4,5,6,7,8,9,10,11,12];
@@ -52,7 +52,10 @@ for(let i = 2 ; i<len+1 ; i++){
     v.removeChild(v.childNodes[2]);
 }
 
-
+ yearss=[];
+ years = [];
+ minmax = new Map();
+ ispresent = new Map();
 mainthing();
 
 
@@ -177,20 +180,26 @@ function initilizedata( arr){
             // console.log(year,month,difficulty);
              if(ispresent[year] === undefined){
                  minyear = Math.min(minyear,year);
-
                  console.log(typeof year);
                  ispresent[year]=1;
                  years.push(year);
                  var temp = {...structure};
-                 const value = new Set([...temp[month][2]]);
-                 tags.map((e)=>{
-                    value.add(e);
-                 })
+                //  const value = new Set([...temp[month][2]]);
+                //  tags.map((e)=>{
+                //     value.add(e);
+                //  })
+                const value = new Map(temp[month][2]);
+              
                   const temp2 = [...temp[month][3]];
                  const storingproblems = new Set(temp2[date-1][1]);
+                 const tagsonday = new Map(temp2[date-1][2]);
                  storingproblems.add( makeproblemlink(problemid,index));
                 //  console.log(storingproblems)
-                 temp2[date-1] = [temp2[date-1][0]+1 , storingproblems];
+                  tags.map((e)=>{
+                  value.set(e , (value.get(e) === undefined ?1: value.get(e)+1));
+                  tagsonday.set(e, (tagsonday.get(e) === undefined ?1: tagsonday.get(e)+1));
+                })
+                 temp2[date-1] = [temp2[date-1][0]+1 , storingproblems,tagsonday];
                  console.log(year,temp2);
                  temp[month] =[difficulty,difficulty,value,temp2];
     
@@ -202,14 +211,21 @@ function initilizedata( arr){
                     const temp = {...minmax.get(year)};
                     const firstv = temp[month][0];
                     const secondv = temp[month][1];
-                    const value = new Set([...temp[month][2]]);
-                    tags.map((e)=>{
-                    value.add(e);
-                 })
+                //     const value = new Set([...temp[month][2]]);
+                //     tags.map((e)=>{
+                //     value.add(e);
+                //  })
+                 const value = new Map(temp[month][2]);
+              
                     const temp2 = [...temp[month][3]];
                  const storingproblems = new Set(temp2[date-1][1]);
+                  const tagsonday = new Map(temp2[date-1][2]);
                  storingproblems.add( makeproblemlink(problemid,index));
-                 temp2[date-1] = [temp2[date-1][0]+1 , storingproblems];
+                   tags.map((e)=>{
+                  value.set(e , (value.get(e) === undefined ?1: value.get(e)+1));
+                  tagsonday.set(e, (tagsonday.get(e) === undefined ?1: tagsonday.get(e)+1));
+                })
+                 temp2[date-1] = [temp2[date-1][0]+1 , storingproblems,tagsonday];
 
                     temp[month] = [Math.min(difficulty,firstv) , Math.max(difficulty,secondv),value,temp2];
                    
@@ -231,14 +247,22 @@ function makeproblemlink(contestId,index){
 
 
 function mainmakingcharts(){
-  //  making data for 1st chart, dataset
+  //  making data for 1st chart, dataset and tooltip
  var datasetforchart1= createdatasetfor1stchart();
  var tooltipfordatasetforchart1 = createtooltipforchart1();
  console.log(datasetforchart1);
  console.log(tooltipfordatasetforchart1);
+ // 1st chart
  makechart1(datasetforchart1,tooltipfordatasetforchart1);
+ // making data for 2nd chart ,dataset = count  ,tooltip
+//  var datasetforchar2 = createdatasetfor2stchart();   
 
 }
+
+// function createdatasetfor2stchart(){
+
+// }
+
 
 function makechart1(dataset, tooltip){
   let charstatus = Chart.getChart("everyyear");
@@ -292,13 +316,13 @@ function createtooltipforchart1(){
     var arrayofstrings=[];
     var s='';
     let j=0;
-    for(const value of arr){
+    for(const [key,value] of arr.entries(arr)){
       if(j === 4){
         j=0;
         arrayofstrings.push(s);
         s='';
       }
-      s =s  + value + ', ';
+      s =s  + key + ': '+ value+', ';
 
       j++;
     }
@@ -306,7 +330,7 @@ function createtooltipforchart1(){
     ans.push(arrayofstrings);
 
    }
-   return ans;
+   return ans; 
 
 
 }
