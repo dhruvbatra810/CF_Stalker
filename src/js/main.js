@@ -7,14 +7,14 @@ function updateminyear(){
   //calling to function 
   mainmakingcharts();
 }
-var valueformonth ;  // ..............................
+var valueformonth =1;  // ..............................
 function upddatevalueformonth(){
   valueformonth = parseInt(this.value);
   console.log(valueformonth);
   // calling to function
   mainmakingcharts();
 }
-var valueforday;  // .................................
+var valueforday=1;  // .................................
 function updatevalueforday(){
   valueforday = parseInt(this.value);
   console.log(valueforday);
@@ -87,7 +87,7 @@ function mainthing(){
         console.log('result',minmax);
         if(minyear === Infinity)
          {
-                const getthing = document.getElementById('selectyear');
+                const getthing = document.getElementById('ifnotpresent');
       const element = document.createElement('h1');
       const createnode = document.createTextNode('nothing to show here, go solve a problem');
       element.append(createnode);
@@ -255,13 +255,150 @@ function mainmakingcharts(){
  // 1st chart
  makechart1(datasetforchart1,tooltipfordatasetforchart1);
  // making data for 2nd chart ,dataset = count  ,tooltip
-//  var datasetforchar2 = createdatasetfor2stchart();   
+ var datasetforchar2 = createdatasetfor2stchart();   
+ var tooltipfordatasetforchart2 =  createtooltipforchart2();
+ console.log(datasetforchar2);
+  console.log(tooltipfordatasetforchart2);
+  //2nd chart
+ makechart2(datasetforchar2,tooltipfordatasetforchart2);
+ //data for solve on that day problem
+  const v = solvedonthatday();
+  console.log(v);
+  //showing the values of problem solved on that day;
+  ShowProblemsSolvedOnThatDay(v);
+
+}
+function ShowProblemsSolvedOnThatDay(arr){
+
+    const getid = document.getElementById('solvedonthatday');
+    const ul = document.createElement('ul');
+    for(let i = 0 ;i<arr.length;i++){
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      // const href = document.createAttribute('target');
+      // href.value =  arr[i];
+      a.href=arr[i];
+      a.target='_blank';
+      console.log(arr[i]);
+
+      const tn = document.createTextNode(`problem${i+1}`);
+      a.appendChild(tn);
+      li.append(a);
+      ul.append(li);
+    }
+    getid.append(ul);
+
+
+}
+function solvedonthatday(){
+  const v = minmax.get(minyear);
+  const month  = v[valueformonth-1];
+  const fourthvalue = month[3];
+  const particularday = fourthvalue[valueforday-1];
+  const ans =[];
+  console.log(fourthvalue);
+  for(let value of particularday[1]){
+    ans.push(value);
+  }
+  return ans;
+
 
 }
 
-// function createdatasetfor2stchart(){
+function makechart2(dataset,tooltip){
 
-// }
+  let charstatus = Chart.getChart("everymonth");
+  if(charstatus != undefined)
+  charstatus.destroy();
+  var ctx = document.getElementById("everymonth").getContext("2d");
+ var data={
+  labels : days,
+  datasets:dataset
+ }
+ console.log(data);
+ const titleTooltip = (tooltipItems) =>{
+                return  tooltip[parseInt(tooltipItems[0].label) -1];
+            }
+
+         var myBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    barValueSpacing: 20,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                min: 0,
+                            }
+                        }]
+                    },
+                    plugins:{
+                        tooltip:{
+                            yAlign:'bottom',
+                            displayColors: false,
+                            callbacks:{
+                                title: titleTooltip
+                            }
+
+                        }
+                    }
+                }
+            });    
+
+
+
+}
+function createtooltipforchart2(){
+  const v = minmax.get(minyear);
+  const month = v[valueformonth-1];
+  const vv = month[3];
+  const ans=[];
+  
+  for(let i = 0 ;i<31;i++){
+     const arr=  vv[i][2];
+      var arrayofstrings=[];
+    var s='';
+    let j=0;
+    for(const [key,value] of arr.entries(arr)){
+      if(j === 4){
+        j=0;
+        arrayofstrings.push(s);
+        s='';
+      }
+      s =s  + key + ': '+ value+', ';
+
+      j++;
+    }
+    arrayofstrings.push(s);
+    ans.push(arrayofstrings);
+  }
+  console.log(ans);
+  return ans;
+  
+}
+function createdatasetfor2stchart(){
+ const v = minmax.get(minyear);
+ const month  = v[valueformonth-1];
+ const vv = month[3];
+ console.log(vv);
+ const arrrr=[];
+ const arrrrcolor=[];
+ for(let i = 0 ;i<31;i++){
+  arrrr.push(vv[i][0]);
+  arrrrcolor.push('rgba(255, 206, 86, 0.5)');
+ }
+//  console.log(arrrr);
+
+
+ return [ 
+     {
+       label:"count of problem solved on each day",
+       backgroundColor :arrrrcolor,
+       data:arrrr
+  } ];
+
+
+}
 
 
 function makechart1(dataset, tooltip){
