@@ -3,21 +3,21 @@ const maxdiff = 1000000;
 let minyear=Infinity;// value that will get using select tag
 function updateminyear(){
   minyear = parseInt(this.value);
-  console.log(minyear);
+  //console.log(minyear);
   //calling to function 
   mainmakingcharts();
 }
 var valueformonth =1;  // ..............................
 function upddatevalueformonth(){
   valueformonth = parseInt(this.value);
-  console.log(valueformonth);
+  //console.log(valueformonth);
   // calling to function
   mainmakingcharts();
 }
 var valueforday=1;  // .................................
 function updatevalueforday(){
   valueforday = parseInt(this.value);
-  console.log(valueforday);
+  //console.log(valueforday);
   //calling to function;
   mainmakingcharts();
 }
@@ -46,9 +46,9 @@ var mn ;
 const fun = (e)=>{
 const v = document.getElementById('pageContent');
 const len = v.childNodes.length -1;
-console.log(len);
+//console.log(len);
 for(let i = 2 ; i<len+1 ; i++){
-    console.log(v.childNodes[2].class);
+    //console.log(v.childNodes[2].class);
     v.removeChild(v.childNodes[2]);
 }
 
@@ -84,7 +84,7 @@ function mainthing(){
   $.get(`https://codeforces.com/api/user.status?handle=${profileId}`,function(data){
       if(data.status == "OK"){
         initilizedata(data['result']);
-        console.log('result',minmax);
+        //console.log('result',minmax);
         if(minyear === Infinity)
          {
                 const getthing = document.getElementById('ifnotpresent');
@@ -98,7 +98,7 @@ function mainthing(){
            makeselecttags('foryear' , yearss, updateminyear );
            makeselecttags('formonth',months , upddatevalueformonth);
            makeselecttags('forday' , days, updatevalueforday);
-          //  console.log(minmax);  
+           console.log(minmax);  
           mainmakingcharts();
 
 
@@ -116,7 +116,7 @@ function fillyearss(){
   for(const[key,value] of minmax.entries(minmax)){
     yearss.push(key);
   }
-  console.log(yearss);
+  //console.log(yearss);
 }
 
 
@@ -152,7 +152,7 @@ mybutton.href = '#sneakipeaki'
 let textnode = document.createTextNode('seakipeaki');
 mybutton.appendChild(textnode);
 mybutton.addEventListener('click',fun);
-console.log(mybutton);
+//console.log(mybutton);
 const el = document.createElement('LI');
 el.appendChild(mybutton);
 list[0].append(el);
@@ -163,11 +163,11 @@ list[0].append(el);
 //intilizing the data
 
 function initilizedata( arr){
-    // console.log(arr.lengt);
+    // //console.log(arr.lengt);
     for(let i = arr.length-1 ;i>=0;i--){
-        //    console.log('idk');
+        //    //console.log('idk');
         if(arr[i]['verdict'] == 'OK'){
-            // console.log('hooo');
+            // //console.log('hooo');
             const d = new Date(arr[i]['creationTimeSeconds']*1000);
             const year = d.getFullYear();
             const month = d.getMonth();
@@ -178,10 +178,10 @@ function initilizedata( arr){
             const index =  arr[i]['problem']['index'];
             if (isNaN(difficulty))
               continue;
-            // console.log(year,month,difficulty);
+            
              if(ispresent[year] === undefined){
                  minyear = Math.min(minyear,year);
-                 console.log(typeof year);
+                 //console.log(typeof year);
                  ispresent[year]=1;
                  years.push(year);
                  var temp = {...structure};
@@ -195,13 +195,13 @@ function initilizedata( arr){
                  const storingproblems = new Set(temp2[date-1][1]);
                  const tagsonday = new Map(temp2[date-1][2]);
                  storingproblems.add( makeproblemlink(problemid,index));
-                //  console.log(storingproblems)
+                //  //console.log(storingproblems)
                   tags.map((e)=>{
                   value.set(e , (value.get(e) === undefined ?1: value.get(e)+1));
                   tagsonday.set(e, (tagsonday.get(e) === undefined ?1: tagsonday.get(e)+1));
                 })
                  temp2[date-1] = [temp2[date-1][0]+1 , storingproblems,tagsonday];
-                 console.log(year,temp2);
+                 //console.log(year,temp2);
                  temp[month] =[difficulty,difficulty,value,temp2];
     
                  minmax.set(year,temp);
@@ -234,7 +234,7 @@ function initilizedata( arr){
              }
         }
     }
-    // console.log("wow");
+    // //console.log("wow");
 }
 function makeproblemlink(contestId,index){
   if(contestId && contestId.toString().length<=4){
@@ -253,20 +253,20 @@ function mainmakingcharts(){
   //  making data for 1st chart, dataset and tooltip
  var datasetforchart1= createdatasetfor1stchart();
  var tooltipfordatasetforchart1 = createtooltipforchart1();
- console.log(datasetforchart1);
- console.log(tooltipfordatasetforchart1);
+ //console.log(datasetforchart1);
+ //console.log(tooltipfordatasetforchart1);
  // 1st chart
  makechart1(datasetforchart1,tooltipfordatasetforchart1);
  // making data for 2nd chart ,dataset = count  ,tooltip
  var datasetforchar2 = createdatasetfor2stchart();   
  var tooltipfordatasetforchart2 =  createtooltipforchart2();
- console.log(datasetforchar2);
-  console.log(tooltipfordatasetforchart2);
+ //console.log(datasetforchar2);
+  //console.log(tooltipfordatasetforchart2);
   //2nd chart
  makechart2(datasetforchar2,tooltipfordatasetforchart2);
  //data for solve on that day problem
   const v = solvedonthatday();
-  console.log(v);
+  //console.log(v);
   //showing the values of problem solved on that day;
   ShowProblemsSolvedOnThatDay(v);
 
@@ -326,7 +326,7 @@ function solvedonthatday(){
   const fourthvalue = month[3];
   const particularday = fourthvalue[valueforday-1];
   const ans =[];
-  console.log(fourthvalue);
+  //console.log(fourthvalue);
   for(let value of particularday[1]){
     ans.push(value);
   }
@@ -345,7 +345,7 @@ function makechart2(dataset,tooltip){
   labels : days,
   datasets:dataset
  }
- console.log(data);
+ //console.log(data);
  const titleTooltip = (tooltipItems) =>{
                 return  tooltip[parseInt(tooltipItems[0].label) -1];
             }
@@ -402,7 +402,7 @@ function createtooltipforchart2(){
     arrayofstrings.push(s);
     ans.push(arrayofstrings);
   }
-  console.log(ans);
+  //console.log(ans);
   return ans;
   
 }
@@ -410,14 +410,14 @@ function createdatasetfor2stchart(){
  const v = minmax.get(minyear);
  const month  = v[valueformonth-1];
  const vv = month[3];
- console.log(vv);
+ //console.log(vv);
  const arrrr=[];
  const arrrrcolor=[];
  for(let i = 0 ;i<31;i++){
   arrrr.push(vv[i][0]);
   arrrrcolor.push('#A594F9');
  }
-//  console.log(arrrr);
+//  //console.log(arrrr);
 
 
  return [ 
@@ -440,7 +440,7 @@ function makechart1(dataset, tooltip){
   labels : months,
   datasets:dataset
  }
- console.log(data);
+ //console.log(data);
  const titleTooltip = (tooltipItems) =>{
                 return  tooltip[parseInt(tooltipItems[0].label) -1];
             }
@@ -503,7 +503,7 @@ function createtooltipforchart1(){
 }
 function createdatasetfor1stchart(){
    var v  = minmax.get(minyear);
-  //  console.log(minmax.get(minyear));
+  //  //console.log(minmax.get(minyear));
    var minarr=[],maxarr=[];
    var minarrcolor=[],maxarrcolor=[];
    for(let i = 0 ;i<12;i++){
@@ -512,7 +512,7 @@ function createdatasetfor1stchart(){
      maxarr.push(v[i][1]);
      maxarrcolor.push('#DABFFF');
    }
-   console.log('www');
+   //console.log('www');
    return [ 
      {
        label:"lowest rating problem solved",
