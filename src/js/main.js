@@ -95,6 +95,7 @@ function mainthing(){
            makeselecttags('foryear' , yearss, updateminyear );
            makeselecttags('formonth',months , upddatevalueformonth);
            makeselecttags('forday' , days, updatevalueforday);
+           console.log(minmax);
 
 
          }
@@ -301,6 +302,7 @@ function createtooltipforchart1(){
 
       j++;
     }
+    arrayofstrings.push(s);
     ans.push(arrayofstrings);
 
    }
@@ -315,17 +317,19 @@ function createdatasetfor1stchart(){
    var minarrcolor=[],maxarrcolor=[];
    for(let i = 0 ;i<12;i++){
      minarr.push((v[i][0] === 1000000?0:v[i][0]));
-     minarrcolor.push('rgba(255, 99, 132, 0.2)');
+     minarrcolor.push('rgba(255, 99, 132, 0.5)');
      maxarr.push(v[i][1]);
-     maxarrcolor.push('rgba(54, 162, 235, 0.2)');
+     maxarrcolor.push('rgba(54, 162, 235, 0.5)');
    }
    console.log('www');
    return [ 
      {
+       label:"lowest rating problem solved",
        backgroundColor :minarrcolor,
        data:minarr
   } , 
   { 
+    label:"highest rating problem solved",
     backgroundColor: maxarrcolor,
     data:maxarr
   } ];
