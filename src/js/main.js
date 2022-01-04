@@ -147,9 +147,9 @@ function getProfileIdFromUrl(url){
 
 const list = document.getElementsByClassName("second-level-menu-list");
 const mybutton = document.createElement('A');
-mybutton.style.color='#7a70ff';
+mybutton.style.color='#ff0000';
 mybutton.href = '#sneakipeaki'
-let textnode = document.createTextNode('seakipeaki');
+let textnode = document.createTextNode('sneakpeek');
 mybutton.appendChild(textnode);
 mybutton.addEventListener('click',fun);
 //console.log(mybutton);
