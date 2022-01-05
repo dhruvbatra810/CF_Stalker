@@ -176,8 +176,8 @@ function initilizedata( arr){
             const tags = arr[i]['problem']['tags'];
             const problemid = arr[i]['problem']['contestId'];
             const index =  arr[i]['problem']['index'];
-            if (isNaN(difficulty))
-              continue;
+            // if (isNaN(difficulty))
+            //   continue;
             
              if(ispresent[year] === undefined){
                  minyear = Math.min(minyear,year);
@@ -196,12 +196,16 @@ function initilizedata( arr){
                  const tagsonday = new Map(temp2[date-1][2]);
                  storingproblems.add( makeproblemlink(problemid,index));
                 //  //console.log(storingproblems)
+                if(tags !== undefined)
                   tags.map((e)=>{
                   value.set(e , (value.get(e) === undefined ?1: value.get(e)+1));
                   tagsonday.set(e, (tagsonday.get(e) === undefined ?1: tagsonday.get(e)+1));
                 })
                  temp2[date-1] = [temp2[date-1][0]+1 , storingproblems,tagsonday];
                  //console.log(year,temp2);
+                 if (isNaN(difficulty))
+                  {  temp[month] =[1000000,0,value,temp2];}
+                  else
                  temp[month] =[difficulty,difficulty,value,temp2];
     
                  minmax.set(year,temp);
@@ -222,13 +226,17 @@ function initilizedata( arr){
                  const storingproblems = new Set(temp2[date-1][1]);
                   const tagsonday = new Map(temp2[date-1][2]);
                  storingproblems.add( makeproblemlink(problemid,index));
+                 if(tags !== undefined)
                    tags.map((e)=>{
                   value.set(e , (value.get(e) === undefined ?1: value.get(e)+1));
                   tagsonday.set(e, (tagsonday.get(e) === undefined ?1: tagsonday.get(e)+1));
                 })
                  temp2[date-1] = [temp2[date-1][0]+1 , storingproblems,tagsonday];
-
-                    temp[month] = [Math.min(difficulty,firstv) , Math.max(difficulty,secondv),value,temp2];
+                    
+                 if (isNaN(difficulty))
+                  {  temp[month] =[firstv,secondv,value,temp2];}
+                  else
+                 temp[month] = [Math.min(difficulty,firstv) , Math.max(difficulty,secondv),value,temp2];
                    
                     minmax.set(year,temp);
              }
