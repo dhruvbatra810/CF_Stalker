@@ -1,21 +1,20 @@
 {
-    "manifest_version":2,
+    "manifest_version":3,
     "name":"CF stalker",
-    "version":"0.1.1",
+    "version":"0.1.2",
     "description":"stalk profiles on code forces",
     "icons":{
          "128": "src/icons/128.png",
         "48": "src/icons/48.png",
         "16": "src/icons/16.png"
     },
-    "browser_action":{
+    "action":{
         "default_icon":"src/icons/16.png",
         "default_popup":"src/popup.html",
         "default_title":"CF stalker"
     },
     "background":{
-        "scripts": ["src/js/bgscripts.js"],
-        "persistent": false
+        "service_worker": "src/js/bgscripts.js"
     },
     "content_scripts":[
         {
@@ -23,7 +22,8 @@
             "js":["src/lib/jquery-3.6.0.min.js","src/lib/chart.min.js","src/js/main.js"]
         }
     ],
-     "permissions":[
+    "permissions":[],
+    "host_permissions":[
         "https://codeforces.com/*"
     ]
 }

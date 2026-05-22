@@ -95,10 +95,14 @@ function mainthing(){
          }
          else{
            fillyearss();
-           makeselecttags('foryear' , yearss, updateminyear );
-           makeselecttags('formonth',months , upddatevalueformonth);
-           makeselecttags('forday' , days, updatevalueforday);
-           console.log(minmax);  
+           const now = new Date();
+           const currentYear = now.getFullYear();
+           minyear = yearss.includes(currentYear) ? currentYear : yearss[yearss.length - 1];
+           valueformonth = now.getMonth() + 1;
+           valueforday = now.getDate();
+           makeselecttags('foryear' , yearss, updateminyear, minyear);
+           makeselecttags('formonth',months , upddatevalueformonth, valueformonth);
+           makeselecttags('forday' , days, updatevalueforday, valueforday);
           mainmakingcharts();
 
 
@@ -121,7 +125,7 @@ function fillyearss(){
 
 
 
-function makeselecttags(where,arr,fun){
+function makeselecttags(where,arr,fun,defaultVal){
 const insertin = document.getElementById(where);
 const selectt = document.createElement('select');
 selectt.addEventListener('change',fun);
@@ -132,6 +136,7 @@ selectt.addEventListener('change',fun);
    v.append(tn);
    att.value = `${arr[key]}`;
    v.setAttributeNode(att);
+   if(arr[key] == defaultVal) v.selected = true;
    selectt.appendChild(v);
  }
  insertin.append(selectt);
@@ -190,18 +195,19 @@ function initilizedata( arr){
                 //     value.add(e);
                 //  })
                 const value = new Map(temp[month][2]);
-              
+
                   const temp2 = [...temp[month][3]];
                  const storingproblems = new Set(temp2[date-1][1]);
                  const tagsonday = new Map(temp2[date-1][2]);
-                 storingproblems.add( makeproblemlink(problemid,index));
-                //  //console.log(storingproblems)
-                if(tags !== undefined)
+                 const problemLink = makeproblemlink(problemid,index);
+                 const isNewProblem = !storingproblems.has(problemLink);
+                 storingproblems.add(problemLink);
+                if(isNewProblem && tags !== undefined)
                   tags.map((e)=>{
                   value.set(e , (value.get(e) === undefined ?1: value.get(e)+1));
                   tagsonday.set(e, (tagsonday.get(e) === undefined ?1: tagsonday.get(e)+1));
                 })
-                 temp2[date-1] = [temp2[date-1][0]+1 , storingproblems,tagsonday];
+                 temp2[date-1] = [temp2[date-1][0] + (isNewProblem ? 1 : 0) , storingproblems,tagsonday];
                  //console.log(year,temp2);
                  if (isNaN(difficulty))
                   {  temp[month] =[1000000,0,value,temp2];}
@@ -221,17 +227,19 @@ function initilizedata( arr){
                 //     value.add(e);
                 //  })
                  const value = new Map(temp[month][2]);
-              
+
                     const temp2 = [...temp[month][3]];
                  const storingproblems = new Set(temp2[date-1][1]);
-                  const tagsonday = new Map(temp2[date-1][2]);
-                 storingproblems.add( makeproblemlink(problemid,index));
-                 if(tags !== undefined)
+                 const tagsonday = new Map(temp2[date-1][2]);
+                 const problemLink = makeproblemlink(problemid,index);
+                 const isNewProblem = !storingproblems.has(problemLink);
+                 storingproblems.add(problemLink);
+                 if(isNewProblem && tags !== undefined)
                    tags.map((e)=>{
                   value.set(e , (value.get(e) === undefined ?1: value.get(e)+1));
                   tagsonday.set(e, (tagsonday.get(e) === undefined ?1: tagsonday.get(e)+1));
                 })
-                 temp2[date-1] = [temp2[date-1][0]+1 , storingproblems,tagsonday];
+                 temp2[date-1] = [temp2[date-1][0] + (isNewProblem ? 1 : 0) , storingproblems,tagsonday];
                     
                  if (isNaN(difficulty))
                   {  temp[month] =[firstv,secondv,value,temp2];}
@@ -363,6 +371,15 @@ function makechart2(dataset,tooltip){
                 data: data,
                 options: {
                     barValueSpacing: 20,
+                    onClick: (event, elements) => {
+                        if(elements.length > 0){
+                            const clickedDay = days[elements[0].index];
+                            valueforday = clickedDay;
+                            const sel = document.querySelector('#forday select');
+                            if(sel) sel.value = clickedDay;
+                            mainmakingcharts();
+                        }
+                    },
                     scales: {
                         yAxes: [{
                             ticks: {
@@ -381,8 +398,7 @@ function makechart2(dataset,tooltip){
                         }
                     }
                 }
-            });    
-
+            });
 
 
 }
@@ -458,6 +474,15 @@ function makechart1(dataset, tooltip){
                 data: data,
                 options: {
                     barValueSpacing: 20,
+                    onClick: (event, elements) => {
+                        if(elements.length > 0){
+                            const clickedMonth = months[elements[0].index];
+                            valueformonth = clickedMonth;
+                            const sel = document.querySelector('#formonth select');
+                            if(sel) sel.value = clickedMonth;
+                            mainmakingcharts();
+                        }
+                    },
                     scales: {
                         yAxes: [{
                             ticks: {
@@ -476,7 +501,7 @@ function makechart1(dataset, tooltip){
                         }
                     }
                 }
-            });    
+            });
 
 
 }

@@ -1,17 +1,9 @@
-chrome.runtime.onMessage.addListener(function(request,sender,sendResponse){
-    if(request.todo == "appendHTML"){
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET','src/peek.html',true);
-        xhr.onprogress = function(){
-            console.log('XHR object on progress');
-        }
-        xhr.onload = function(){
-            console.log('XHR object loaded');
-            sendResponse({
-                htmlResponse : this.responseText,
-            });
-        }
-        xhr.send();
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.todo === "appendHTML") {
+        fetch(chrome.runtime.getURL('src/peek.html'))
+            .then(res => res.text())
+            .then(html => sendResponse({ htmlResponse: html }))
+            .catch(() => sendResponse({ htmlResponse: '' }));
         return true;
     }
 });
